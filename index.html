@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>건강 체크 채팅</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="chat-container">
+      <!-- 심박수 표시 -->
+      <div class="pulse-display">
+        현재 심박수: <span id="pulse">{{ pulse }}</span> bpm
+      </div>
+      <div id="chat-box"><!-- 메시지들이 차례대로 쌓입니다 --></div>
+      <div id="typing" class="typing-indicator" hidden>AI가 입력 중…</div>
+      <div class="input-area">
+        <input type="text" id="user-input" placeholder="증상을 입력하세요" />
+        <button id="send-btn">전송</button>
+      </div>
+    </div>
+    <script>
+      console.clear();
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
