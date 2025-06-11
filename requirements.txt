@@ -1,4 +1,0 @@
-Flask
-pyttsx3
-SpeechRecognition
-openai  # 또는 google-generativeai
