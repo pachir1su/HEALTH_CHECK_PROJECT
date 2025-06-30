@@ -5,11 +5,8 @@ import time
 import random
 
 # --- 설정 값 ---
-# 아두이노가 연결된 시리얼 포트 이름 (Windows: 'COM3', 'COM4' 등 / Mac, Linux: '/dev/tty.usbmodem...', '/dev/ttyACM0' 등)
-# 자신의 환경에 맞게 수정해야 합니다.
 SERIAL_PORT = 'COM3'  # 예시: Windows
-# SERIAL_PORT = '/dev/tty.usbmodem14201' # 예시: Mac
-BAUD_RATE = 9600      # 아두이노 스케치에 설정된 통신 속도와 일치해야 함
+BAUD_RATE = 9600      # 통신 속도
 
 # 시리얼 객체를 전역으로 관리하여 연결을 유지
 ser = None
@@ -21,7 +18,7 @@ def initialize_sensor():
     """
     global ser
     if ser and ser.is_open:
-        return True # 이미 연결되어 있으면 True 반환
+        return True
     try:
         ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=2)
         time.sleep(2)  # 아두이노가 리셋되고 안정화될 때까지 잠시 대기
@@ -41,7 +38,7 @@ def get_pulse():
     """
     global ser
     if ser is None or not ser.is_open:
-        # 센서 연결이 안 되어 있을 경우, 랜덤 값으로 대체 (기존 방식)
+        # 센서 연결이 안 되어 있을 경우, 랜덤 값으로 대체
         return get_simulated_pulse("센서 미연결")
 
     try:
@@ -79,7 +76,7 @@ def close_sensor():
         ser.close()
         print("🔌 센서 연결이 종료되었습니다.")
 
-# 이 파일을 직접 실행하여 센서 연결을 테스트할 수 있습니다.
+# 이 파일을 직접 실행하여 센서 연결을 테스트할 수 있음.
 if __name__ == '__main__':
     if initialize_sensor():
         try:
