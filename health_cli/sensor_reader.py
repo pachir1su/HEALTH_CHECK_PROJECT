@@ -5,7 +5,7 @@ import time
 import random
 
 # --- 설정 값 ---
-SERIAL_PORT = 'COM3'  # 예시: Windows
+SERIAL_PORT = 'COM11'  # 예시: Windows
 BAUD_RATE = 9600      # 통신 속도
 
 # 시리얼 객체를 전역으로 관리하여 연결을 유지
