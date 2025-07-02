@@ -3,7 +3,7 @@ import time
 import random
 
 # --- 설정 값 ---
-SERIAL_PORT = 'COM11'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
+SERIAL_PORT = '/dev/ttyACM0'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
 BAUD_RATE = 9600
 
 ser = None
