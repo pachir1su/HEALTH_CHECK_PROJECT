@@ -2,8 +2,30 @@ import serial
 import time
 import random
 
+def read_sensors(timeout=3):
+    if not initialize_sensor():
+        return None, None
+
+    bpm, temp = None, None
+    start = time.time()
+
+    while time.time() - start < timeout:
+        try:
+            line = ser.readline().decode('utf-8', errors='ignore').strip()
+            if line.startswith("BPM:"):
+                bpm = int(line.split("BPM:")[1])
+            elif line.startswith("TEMP:"):
+                temp = float(line.split("TEMP:")[1])
+            if bpm is not None and temp is not None:
+                return bpm, temp
+        except Exception as e:
+            continue
+
+    return None, None
+
+
 # --- 설정 값 ---
-SERIAL_PORT = '/dev/ttyACM0'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
+SERIAL_PORT = 'COM12'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
 BAUD_RATE = 9600
 
 ser = None
@@ -41,8 +63,10 @@ def read_sensors(timeout=5):
         elif line.startswith("TEMP:"):
             val = line.split("TEMP:")[1]
             if val != "ERR":
+          
                 try:
                     temp = float(val)
+                    
                 except ValueError:
                     pass
         if bpm is not None and temp is not None:
@@ -57,11 +81,11 @@ def get_pulse():
 def get_temperature():
     """온도(TEMP)만 반환합니다."""
     _, temp = read_sensors()
-    return temp
+    return temp 
 
 def get_simulated_data(reason=""):
     print(f"⚠️ 시뮬레이트 데이터 사용 (사유: {reason})")
-    return random.randint(60, 100), round(random.uniform(20.0, 30.0), 2)
+    return random.randint(60, 100), round(random.uniform(34.5, 42.0), 2)
 
 def close_sensor():
     global ser
