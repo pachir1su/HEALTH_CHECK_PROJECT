@@ -25,7 +25,7 @@ def read_sensors(timeout=3):
 
 
 # --- 설정 값 ---
-SERIAL_PORT = 'COM12'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
+SERIAL_PORT = '/dev/ttyACM'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
 BAUD_RATE = 9600
 
 ser = None
