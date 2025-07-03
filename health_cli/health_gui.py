@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import scrolledtext, messagebox, simpledialog, ttk
 from sensor_reader import get_pulse, get_temperature, initialize_sensor, close_sensor
 from health_ai import analyze_with_history
+
 import threading
 import pyttsx3
 import datetime
@@ -13,6 +14,23 @@ import os
 import time
 
 class HealthApp:
+    def update_sensor_values(self):
+        while self.updating:
+            bpm = get_pulse()
+            temp = get_temperature()
+
+            if bpm is None or temp is None:
+                text_bpm = "심박수: --- bpm"
+                text_temp = "온도: --- ℃"
+            else:
+                text_bpm = f"심박수: {bpm} bpm"
+                text_temp = f"온도: {temp:.2f} ℃"
+
+            self.root.after(0, lambda b=text_bpm: self.pulse_label.config(text=b))
+            self.root.after(0, lambda t=text_temp: self.temp_label.config(text=t))
+            time.sleep(1)
+
+
     def __init__(self, root):
         self.root = root
         self.root.title("건강 체크 챗봇")
@@ -21,20 +39,16 @@ class HealthApp:
              "당신은 헬스케어 상담 AI입니다. 사용자가 증상, 심박수, 온도를 제공하면 2문장 내로 간단히 조언해 주세요."}
         ]
 
-        # TTS 설정
         self.tts_engine = pyttsx3.init()
         self.voice_id = None
         self.speech_rate = 150
         self.set_voices()
 
-        # 음성 인식 상태
         self.voice_recognition_active = False
         self.audio_frames = []
 
-        # GUI 위젯 생성
         self.create_widgets()
 
-        # 센서 초기화 및 실시간 업데이트
         initialize_sensor()
         self.updating = True
         threading.Thread(target=self.update_sensor_values, daemon=True).start()
@@ -48,14 +62,12 @@ class HealthApp:
             self.tts_engine.setProperty('voice', self.voice_id)
 
     def create_widgets(self):
-        # 버튼
         btn_frame = tk.Frame(self.root)
         btn_frame.pack(fill="x", pady=8)
         tk.Button(btn_frame, text="직접 입력", command=self.check_text).pack(side="left", padx=10)
         tk.Button(btn_frame, text="오늘 기록 보기", command=self.show_log).pack(side="left", padx=10)
         tk.Button(btn_frame, text="종료", command=self.on_close).pack(side="left", padx=10)
 
-        # TTS 설정
         tts_frame = tk.Frame(self.root)
         tts_frame.pack(pady=5)
         tk.Label(tts_frame, text="음성 선택:").pack(side="left")
@@ -69,7 +81,6 @@ class HealthApp:
         self.rate_slider.set(self.speech_rate)
         self.rate_slider.pack(side="left", padx=(0,8))
 
-        # 음성 인식
         vr_frame = tk.Frame(self.root)
         vr_frame.pack(pady=2)
         self.vr_btn = tk.Button(vr_frame, text="음성인식 ON", bg="green", fg="white",
@@ -79,12 +90,10 @@ class HealthApp:
                                   font=("맑은 고딕",18,"bold"))
         self.vr_status.pack(side="left", padx=(7,0))
 
-        # 채팅창
         self.chatbox = scrolledtext.ScrolledText(self.root, height=15, width=80,
                                                  state="disabled", font=("맑은 고딕",12))
         self.chatbox.pack(padx=10, pady=8)
 
-        # 센서 라벨
         sensor_frame = tk.Frame(self.root)
         sensor_frame.pack(pady=5)
         self.pulse_label = tk.Label(sensor_frame, text="심박수: --- bpm",
@@ -93,16 +102,6 @@ class HealthApp:
         self.temp_label = tk.Label(sensor_frame, text="온도: --- ℃",
                                    font=("맑은 고딕",12,"bold"))
         self.temp_label.pack(side="left", padx=20)
-
-    def update_sensor_values(self):
-        while self.updating:
-            bpm = get_pulse()
-            temp = get_temperature()
-            text_bpm = f"심박수: {bpm} bpm" if bpm is not None else "심박수: --- bpm"
-            text_temp = f"온도: {temp:.2f} ℃" if temp is not None else "온도: --- ℃"
-            self.root.after(0, lambda b=text_bpm: self.pulse_label.config(text=b))
-            self.root.after(0, lambda t=text_temp: self.temp_label.config(text=t))
-            time.sleep(1)
 
     def add_chat(self, who, text):
         self.chatbox.configure(state="normal")
