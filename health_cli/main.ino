@@ -25,7 +25,7 @@ def read_sensors(timeout=3):
 
 
 # --- 설정 값 ---
-SERIAL_PORT = 'COM14'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
+SERIAL_PORT = 'dev/ttyACM0'   # Windows 예시 → Raspberry Pi: '/dev/ttyACM0'
 BAUD_RATE = 9600
 
 ser = None
@@ -85,7 +85,7 @@ def get_temperature():
 
 def get_simulated_data(reason=""):
     print(f"⚠️ 시뮬레이트 데이터 사용 (사유: {reason})")
-    return random.randint(60, 100), round(random.uniform(20.0, 30.0), 2)
+    return random.randint(55, 130), round(random.uniform(35.3, 42.1), 2)
 
 def close_sensor():
     global ser
