@@ -8,6 +8,10 @@
 
 ---
 
+## Notion 링크
+https://pachir1su.notion.site/2025-SDGs-1b9f776d60dc8058976bc03379ceaf06?source=copy_link
+
+---
 ## 주요 기능
 
 - **실시간 센서 연동**  
